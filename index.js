@@ -22,10 +22,18 @@ async function run() {
       .db("valigaHardware")
       .collection("allTools");
     const usersCollection = client.db("valigaHardware").collection("user");
+    const orderCollection = client.db("valigaHardware").collection("orders");
     //   get the all data
     app.get("/", async (req, res) => {
       const query = {};
       const cursor = allToolsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    //get all user
+    app.get("/user", async (req, res) => {
+      let query = {};
+      const cursor = usersCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -43,6 +51,22 @@ async function run() {
         updateDoc,
         options
       );
+      res.send(result);
+    });
+
+    // Post user all orders
+    app.post("/order", async (req, res) => {
+      let order = req.body;
+      // sendEmail(appoinment);
+      const result = await orderCollection.insertOne(order);
+      res.send({ success: true, result });
+    });
+    // get user all orrder
+    app.get("/userAppoinment", async (req, res) => {
+      let email = req.query.email;
+      const query = { email: email };
+      const cursor = orderCollection.find(query);
+      const result = await cursor.toArray();
       res.send(result);
     });
   } finally {
