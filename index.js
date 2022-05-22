@@ -62,11 +62,27 @@ async function run() {
       res.send({ success: true, result });
     });
     // get user all orrder
-    app.get("/userAppoinment", async (req, res) => {
+    app.get("/order", async (req, res) => {
       let email = req.query.email;
       const query = { email: email };
       const cursor = orderCollection.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.put("/order/:id", async (req, res) => {
+      let id = req.params.id;
+      let filter = { _id: ObjectId(id) };
+      let options = { upsert: true };
+      const updateDoc = {
+        $set: { paid: true },
+      };
+      const result = await orderCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
       res.send(result);
     });
   } finally {
