@@ -31,6 +31,12 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    app.post("/", async (req, res) => {
+      let product = req.body;
+      // sendEmail(appoinment);
+      const result = await allToolsCollection.insertOne(product);
+      res.send({ success: true, result });
+    });
     //get all user
     app.get("/user", async (req, res) => {
       let query = {};
@@ -39,9 +45,20 @@ async function run() {
       res.send(result);
     });
 
+    // make admin api request
+    // user role change api
+    app.put("/user/admin/:email", async (req, res) => {
+      let email = req.params.email;
+      let filter = { email: email };
+      const updateDoc = {
+        $set: { role: "admin" },
+      };
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
     // user added or replace on the database
     app.put("/user", async (req, res) => {
-      let filter = { name: req.body.email };
+      let filter = { email: req.body.email };
       let data = req.body;
       const options = { upsert: true };
       const updateDoc = {
@@ -62,10 +79,17 @@ async function run() {
       const result = await orderCollection.insertOne(order);
       res.send({ success: true, result });
     });
-    // get user all orrder
+    // get user all order
     app.get("/order", async (req, res) => {
       let email = req.query.email;
       const query = { email: email };
+      const cursor = orderCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    // get  all orrder
+    app.get("/allOrder", async (req, res) => {
+      let query = {};
       const cursor = orderCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
@@ -74,6 +98,8 @@ async function run() {
     //inserted user order if
     app.put("/order/:id", async (req, res) => {
       let id = req.params.id;
+      let tnx = req.body;
+      console.log(tnx);
       let filter = { _id: ObjectId(id) };
       let options = { upsert: true };
       const updateDoc = {
@@ -84,7 +110,7 @@ async function run() {
         updateDoc,
         options
       );
-      console.log(result);
+      // console.log(result);
       res.send(result);
     });
 
@@ -99,6 +125,13 @@ async function run() {
     });
 
     // insert review api
+    // get all reviews
+    app.get("/review", async (req, res) => {
+      const query = {};
+      const cursor = reviewCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // Post user all orders
     app.post("/review", async (req, res) => {
       let review = req.body;
