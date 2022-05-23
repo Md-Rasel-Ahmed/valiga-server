@@ -23,6 +23,7 @@ async function run() {
       .collection("allTools");
     const usersCollection = client.db("valigaHardware").collection("user");
     const orderCollection = client.db("valigaHardware").collection("orders");
+    const reviewCollection = client.db("valigaHardware").collection("review");
     //   get the all data
     app.get("/", async (req, res) => {
       const query = {};
@@ -70,6 +71,7 @@ async function run() {
       res.send(result);
     });
 
+    //inserted user order if
     app.put("/order/:id", async (req, res) => {
       let id = req.params.id;
       let filter = { _id: ObjectId(id) };
@@ -84,6 +86,25 @@ async function run() {
       );
       console.log(result);
       res.send(result);
+    });
+
+    // remove single item api
+    app.delete("/order/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.send(result);
+      }
+    });
+
+    // insert review api
+    // Post user all orders
+    app.post("/review", async (req, res) => {
+      let review = req.body;
+      // sendEmail(appoinment);
+      const result = await reviewCollection.insertOne(review);
+      res.send({ success: true, result });
     });
   } finally {
     // await client.close();
