@@ -37,6 +37,16 @@ async function run() {
       const result = await allToolsCollection.insertOne(product);
       res.send({ success: true, result });
     });
+
+    // remove single product  api
+    app.delete("/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: ObjectId(id) };
+      const result = await allToolsCollection.deleteOne(query);
+      if (result.deletedCount === 1) {
+        res.send(result);
+      }
+    });
     //get all user
     app.get("/user", async (req, res) => {
       let query = {};
