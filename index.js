@@ -104,12 +104,23 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+    // unpaid order status change api
+    app.put("/allOrder/:id", async (req, res) => {
+      let id = req.params.id;
+      let query = { _id: ObjectId(id) };
+      //  let email = req.params.email;
+      //  let filter = { email: email };
+      const updateDoc = {
+        $set: { status: "Shipped" },
+      };
+      const result = await orderCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
 
     //inserted user order if
     app.put("/order/:id", async (req, res) => {
       let id = req.params.id;
       let tnx = req.body;
-      console.log(tnx);
       let filter = { _id: ObjectId(id) };
       let options = { upsert: true };
       const updateDoc = {
