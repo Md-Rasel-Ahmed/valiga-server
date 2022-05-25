@@ -93,7 +93,7 @@ async function run() {
     });
     // user added or replace on the database
     app.put("/user", async (req, res) => {
-      let filter = { email: req.body.email };
+      let filter = { email: req.body.email, name: req.body.name };
       let data = req.body;
       const options = { upsert: true };
       const updateDoc = {
