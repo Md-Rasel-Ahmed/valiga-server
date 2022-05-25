@@ -23,9 +23,7 @@ const verifingToken = (req, res, next) => {
   });
 };
 // Create a get api
-app.get("/", (req, res) => {
-  res.send("Api done");
-});
+
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.6plls.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
