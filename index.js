@@ -117,14 +117,15 @@ async function run() {
       res.send(result);
     });
 
-    //inserted user order if
+    //inserted user order
     app.put("/order/:id", async (req, res) => {
       let id = req.params.id;
-      let tnx = req.body;
+      let body = req.body;
+      console.log(body);
       let filter = { _id: ObjectId(id) };
       let options = { upsert: true };
       const updateDoc = {
-        $set: { paid: true },
+        $set: { paid: true, tnxId: body.tnxId },
       };
       const result = await orderCollection.updateOne(
         filter,
@@ -160,6 +161,9 @@ async function run() {
       const result = await reviewCollection.insertOne(review);
       res.send({ success: true, result });
     });
+
+    // Payment api
+    app.put("/");
   } finally {
     // await client.close();
   }
