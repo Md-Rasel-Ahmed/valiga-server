@@ -91,9 +91,25 @@ async function run() {
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
+    // // user role change api
+    // app.put("/user/user/:email", async (req, res) => {
+    //   let email = req.params.email;
+    //   let filter = { email: email };
+    //   if (filter) {
+    //     const result1 = usersCollection.find(filter);
+    //     res.send(result1);
+    //     return;
+    //   }
+    //   else{
+    //     const updateDoc = {
+    //     $set: { role: "user" },
+    //   };
+    //   const result = await usersCollection.updateOne(filter, updateDoc);
+    //   res.send(result);}
+    // });
     // user added or replace on the database
     app.put("/user", async (req, res) => {
-      let filter = { email: req.body.email, name: req.body.name };
+      let filter = { email: req.body.email };
       let data = req.body;
       const options = { upsert: true };
       const updateDoc = {
@@ -123,7 +139,7 @@ async function run() {
       res.send(result);
     });
     // get  all orrder
-    app.get("/allOrder", async (req, res) => {
+    app.get("/allOrder", verifingToken, async (req, res) => {
       let query = {};
       const cursor = orderCollection.find(query);
       const result = await cursor.toArray();
