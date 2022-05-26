@@ -64,7 +64,7 @@ async function run() {
       }
     });
     //get all user
-    app.get("/user", async (req, res) => {
+    app.get("/user", verifingToken, async (req, res) => {
       let query = {};
       const cursor = usersCollection.find(query);
       const result = await cursor.toArray();
